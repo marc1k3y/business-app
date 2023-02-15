@@ -1,14 +1,14 @@
 import "./App.css"
 import { useState } from "react"
 import { AuthModule } from "./modules/auth"
-import { DashboardModule } from "./modules/dashboard"
+import { AppRouter } from "./Router"
 
 export default function App() {
   const [isAuth, setIsAuth] = useState(false)
   return (
     <div className="App">
       {isAuth
-        ? <DashboardModule />
+        ? <AppRouter />
         : <AuthModule setIsAuth={setIsAuth} />}
     </div>
   )
