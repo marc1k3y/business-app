@@ -6,6 +6,8 @@ export const DashboardModule = () => {
   const { pathname } = useLocation()
   const aviableActions = permissions[pathname.split("/")[1]].actions[currentRole]
   return (
-    <div>{currentRole} can {aviableActions?.map((action) => <span key={action}>{action} </span>)}</div>
+    <div>
+      dashboard
+    </div>
   )
 }

@@ -3,8 +3,8 @@ import { useState } from "react"
 import { loginHandler } from "./api"
 
 export const AuthModule = ({ setIsAuth }) => {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("serviceAccount@mail.com")
+  const [password, setPassword] = useState("63%n9l$gPXw0")
 
   function login(e) {
     e.preventDefault()
