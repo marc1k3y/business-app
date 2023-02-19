@@ -1,43 +1,61 @@
 import css from "./style.module.css"
 import { useEffect, useState } from "react"
-import { DatePicker, message, Table } from "antd"
-import { fetchCompletedService } from "./api"
-import { CompletedTemplate } from "./templates/Completed"
+import { DatePicker, message } from "antd"
+import { fetchTableService } from "./api"
+import { CompletedTemplate } from "./tableTemplates/Completed"
+import { SimpleTable } from "./components/SimpleTable"
+import { PendingTemplate } from "./tableTemplates/Pending"
 
-const { RangePicker } = DatePicker
+// const { RangePicker } = DatePicker
 
-export const FarmingModule = () => {
-  const [data, setData] = useState([])
-  const [range, setRange] = useState(["", ""])
-  const [loading, setLoading] = useState({
+export const FarmingModule = ({ range = ["", ""] }) => {
+  // const [range, setRange] = useState(["", ""])
+  const [messageApi, contextHolder] = message.useMessage()
+  const [data, setData] = useState({
+    pending: [], inWork: [], completed: [], declined: []
+  })
+  const [isLoading, setIsLoading] = useState({
     pending: false, inWork: false, completed: false, declined: false
   })
-  const [messageApi, contextHolder] = message.useMessage()
 
+  // pending
   useEffect(() => {
-    setLoading((prev) => ({ ...prev, completed: true }))
-    fetchCompletedService({ startDate: range[0], endDate: range[1] })
-      .then((res) => setData(res))
+    setIsLoading((prev) => ({ ...prev, pending: true }))
+    fetchTableService({ status: "0", startDate: range[0], endDate: range[1] })
+      .then((res) => setData((prev) => ({ ...prev, pending: res })))
       .catch((e) => messageApi.open({ type: "error", content: e.message }))
-      .finally(() => setLoading((prev) => ({ ...prev, completed: false })))
-  }, [range, messageApi])
+      .finally(() => setIsLoading((prev) => ({ ...prev, pending: false })))
+  }, [
+    // range, 
+    messageApi])
 
-  console.log("range", range);
+  // completed
+  useEffect(() => {
+    setIsLoading((prev) => ({ ...prev, completed: true }))
+    fetchTableService({ status: "2", startDate: range[0], endDate: range[1] })
+      .then((res) => setData((prev) => ({ ...prev, completed: res })))
+      .catch((e) => messageApi.open({ type: "error", content: e.message }))
+      .finally(() => setIsLoading((prev) => ({ ...prev, completed: false })))
+  }, [
+    // range, 
+    messageApi])
+
+  // console.log("range", range);
   return (
     <div className={css.wrapper}>
       {contextHolder}
-      <RangePicker
+      {/* <RangePicker
         format="YYYY-MM-DD"
-        onChange={(_, y) => setRange(y)} />
-      <Table
-        bordered
-        title={() => "Completed"}
-        size="small"
-        columns={CompletedTemplate}
-        dataSource={data}
-        rowKey={(record) => record._id}
-        scroll={{ x: 1300 }}
-        pagination={false}
-        loading={loading.completed} />
+        onChange={(_, y) => setRange(y)} /> */}
+      <SimpleTable
+        title="Pending"
+        template={PendingTemplate}
+        data={data.pending}
+        isLoading={isLoading.pending} />
+      <SimpleTable
+        title="Completed"
+        template={CompletedTemplate}
+        data={data.completed}
+        isLoading={isLoading.completed} />
     </div>)
 }

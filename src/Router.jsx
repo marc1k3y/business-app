@@ -9,6 +9,7 @@ import {
   AccountBookOutlined,
 } from "@ant-design/icons"
 import logo from "./assets/logo.png"
+import { Header } from "antd/es/layout/layout"
 
 
 const { Content, Sider } = Layout
@@ -38,8 +39,6 @@ export const AppRouter = () => {
         marginLeft: 80,
         // marginLeft: collapsed ? 80 : 200,
         minHeight: "calc(100vh - 17px)",
-        borderRadius: "5px",
-        padding: "5px"
       }}>
         <Sider
           collapsible
@@ -57,7 +56,11 @@ export const AppRouter = () => {
             items={links} />
         </Sider>
         <Layout>
-          <Content>
+          {/* <Header /> */}
+          <Content style={{
+            borderRadius: "5px",
+            padding: "5px"
+          }}>
             <Routes>
               {routes.map((route) => (
                 permissions[route.source].access.includes(currentRole) &&

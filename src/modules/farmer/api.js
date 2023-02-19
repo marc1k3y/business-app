@@ -6,14 +6,3 @@ export async function fetchTableService({ status, startDate, endDate }) {
   })
   return data
 }
-
-export async function fetchCompletedService({ startDate, endDate }) {
-  const { data } = await $farmingAPIjwt.get("tableData/get", {
-    params: {
-      status: "2",
-      startDate: startDate,
-      endDate: endDate
-    }
-  })
-  return data
-} 

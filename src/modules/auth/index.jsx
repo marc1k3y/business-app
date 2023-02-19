@@ -1,41 +1,74 @@
 import css from "./style.module.css"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { loginService } from "./api"
-import { Input, Button, Form, theme } from "antd"
-import { UserOutlined } from "@ant-design/icons"
+import { Input, Button, Form, theme, Checkbox, message } from "antd"
+import { UserOutlined, LockOutlined } from "@ant-design/icons"
 import logo from "../../assets/logo.png"
 
 const { useToken } = theme
 
 export const AuthModule = ({ setIsAuth }) => {
-  const [email, setEmail] = useState("ivaychenko.d@gmail.com")
-  const [password, setPassword] = useState("HklfewlWEFn23kl")
+  const [messageApi, contextHolder] = message.useMessage()
+  const [authData, setAuthData] = useState({
+    email: "", password: ""
+  })
+  const [remember, setRemember] = useState(true)
   const [loading, setLoading] = useState(false)
   const { token } = useToken()
 
   function loginHandler() {
+    if (remember) {
+      localStorage.setItem("authData", JSON.stringify(authData))
+    }
     setLoading(true)
-    const authData = { email, password }
     loginService(authData)
       .then(() => setIsAuth(true))
-      .catch((e) => console.error(e.message))
+      .catch((e) => messageApi.open({ type: "error", content: e.message }))
       .finally(() => setLoading(false))
   }
+
+  useEffect(() => {
+    const cacheData = JSON.parse(localStorage.getItem("authData"))
+    if (cacheData?.email && cacheData?.password) {
+      setLoading(true)
+      loginService(cacheData)
+        .then(() => setIsAuth(true))
+        .catch((e) => messageApi.open({ type: "error", content: e.message }))
+        .finally(() => setLoading(false))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <div className={css.wrapper}>
+      {contextHolder}
       <img src={logo} alt="gl-erp" />
-      <Form>
+      <Form onFinish={loginHandler}>
         <Input
+          disabled={loading}
           type="email"
           size="large"
           placeholder="some@mail.ru"
           prefix={<UserOutlined />}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)} />
+          value={authData.email}
+          onChange={(e) => setAuthData((prev) => ({ ...prev, email: e.target.value }))} />
         <Input.Password
-          value={password}
-          onChange={(e) => setPassword(e.target.value)} />
-        <Button type="primary" loading={loading} onClick={loginHandler} style={{ backgroundColor: token.Button.colorPrimaryBg, boxShadow: token.Button.boxShadow }}>
+          disabled={loading}
+          size="large"
+          placeholder="StrongPassword"
+          value={authData.password}
+          prefix={<LockOutlined />}
+          onChange={(e) => setAuthData((prev) => ({ ...prev, password: e.target.value }))} />
+        <Checkbox
+          className={css.checkbox}
+          checked={remember}
+          onChange={() => setRemember(!remember)}>
+          Запомнить меня
+        </Checkbox>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={loading}
+          style={{ backgroundColor: token.Button.colorPrimaryBg, boxShadow: token.Button.boxShadow }}>
           {loading ? "Идет вход.." : "Войти"}
         </Button>
       </Form>

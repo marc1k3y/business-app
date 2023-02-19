@@ -11,10 +11,6 @@ export default function App() {
   return (
     <ConfigProvider theme={{
       components: {
-        Menu: {
-          colorBgContainer: "goldenrod",
-          colorBgBase: "goldenrod"
-        },
         Button: {
           colorPrimaryBg: "goldenrod",
           boxShadow: "0 2px 0 rgba(218, 165, 22, 0.1)"

@@ -2,66 +2,68 @@ import { unix } from "dayjs"
 
 export const CompletedTemplate = [
   {
-    title: 'Date created',
+    title: "Date created",
     width: 100,
-    dataIndex: 'dateCreated',
+    dataIndex: "dateCreated",
     render: ((date) => unix(date).format("DD-MM-YY"))
     // fixed: 'left',
   },
   {
-    title: 'Date completed',
-    width: 140,
-    dataIndex: 'dateCompleted',
+    title: "Date completed",
+    width: 120,
+    dataIndex: "dateCompleted",
     render: ((date) => unix(date).format("DD-MM-YY"))
     // fixed: 'left',
     // sorter: true,
   },
   {
-    title: 'Amount',
-    dataIndex: 'quantity',
+    title: "Amount",
+    dataIndex: "quantity",
   },
   {
-    title: 'Valids',
-    dataIndex: 'valid',
+    title: "Valids",
+    dataIndex: "valid",
   },
   {
-    title: 'Price',
-    dataIndex: 'price',
+    title: "Price",
+    dataIndex: "price",
   },
   {
-    title: 'Total',
-    dataIndex: 'total',
+    title: "Total",
+    dataIndex: "total",
   },
   {
-    title: 'Currency',
+    title: "Currency",
     dataIndex: ["currency", "iso"],
   },
   {
-    title: 'Account type',
+    title: "Account type",
     dataIndex: ["type", "name"],
+    width: 110
   },
   {
-    title: 'Location',
+    title: "Location",
     dataIndex: ["location", "iso"],
   },
   {
-    title: 'Farmer',
+    title: "Farmer",
     dataIndex: ["farmer", "fullName"],
+    width: 130
   },
   {
-    title: 'Description',
-    dataIndex: 'description',
+    title: "Description",
+    dataIndex: "description",
     width: 110,
     render: ((inp) => inp ?? "Empty")
   },
   {
-    title: 'Team',
-    dataIndex: 'team.id',
+    title: "Team",
+    dataIndex: ["team", "id"],
   },
   {
-    title: 'Action',
-    key: 'operation',
-    fixed: 'right',
+    title: "Action",
+    key: "operation",
+    fixed: "right",
     width: 60,
     render: () => <a href="https://google.com">action</a>
   }
