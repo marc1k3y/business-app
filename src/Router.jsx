@@ -3,10 +3,12 @@ import { ConfigProvider, Layout, Menu } from "antd"
 import { useNavigate, Navigate, Route, Routes } from "react-router-dom"
 import { permissions, Roles } from "./permissions"
 import { DashboardModule } from "./modules/dashboard"
+import { FarmingModule } from "./modules/farmer"
 import {
-  TagsOutlined,
   DashboardOutlined,
+  AccountBookOutlined,
 } from "@ant-design/icons"
+import logo from "./assets/logo.png"
 
 
 const { Content, Sider } = Layout
@@ -22,18 +24,19 @@ export const AppRouter = () => {
 
   const links = [
     { key: "dashboard", icon: <DashboardOutlined />, label: "Dashboard" },
-    { key: "test", icon: <TagsOutlined />, label: "Test" },
+    { key: "farming", icon: <AccountBookOutlined />, label: "Farming" },
   ].filter((link) => (permissions[link.key].access.includes(currentRole)))
 
   const routes = [
     { source: "dashboard", path: "/dashboard", element: <DashboardModule /> },
-    { source: "test", path: "/test", element: <DashboardModule /> },
+    { source: "farming", path: "/farming", element: <FarmingModule /> },
   ]
   console.log("Log from Router.jsx, currentRole:", currentRole);
   return (
-    <ConfigProvider theme={{ token: { colorBgLayout: "lightgray" } }}>
+    <ConfigProvider theme={{ token: { colorBgLayout: "white" } }}>
       <Layout hasSider style={{
-        marginLeft: collapsed ? 80 : 200,
+        marginLeft: 80,
+        // marginLeft: collapsed ? 80 : 200,
         minHeight: "calc(100vh - 17px)",
         borderRadius: "5px",
         padding: "5px"
@@ -42,13 +45,10 @@ export const AppRouter = () => {
           collapsible
           collapsed={collapsed}
           onCollapse={() => setCollapsed(!collapsed)}
-          style={{ position: "fixed", left: 0, top: 0, bottom: 0 }} >
-          <div
-            style={{
-              height: 32,
-              margin: 16,
-              background: "rgba(255, 255, 255, 0.2)",
-            }} />
+          style={{ position: "fixed", left: 0, top: 0, bottom: 0, zIndex: 200 }} >
+          <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", margin: "10px 0" }}>
+            <img src={logo} width="50px" alt="gl-erp" />
+          </div>
           <Menu
             theme="dark"
             mode="vertical"

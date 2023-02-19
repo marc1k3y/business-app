@@ -1,7 +1,8 @@
 export const Roles = {
-  1: "owner"
+  1: "owner",
+  3: "buyer"
 }
 export const permissions = {
-  dashboard: { access: ["owner"], actions: { owner: ["read", "write", "create"] } },
-  test: { access: ["owner"], actions: { owner: ["read", "write", "create"] } },
+  dashboard: { access: ["owner", "buyer"], actions: { owner: ["read", "write", "create"] } },
+  farming: { access: ["owner", "buyer"], actions: { owner: ["read", "write", "create"] } },
 }
