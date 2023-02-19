@@ -1,15 +1,13 @@
 import css from "./style.module.css"
 import { useEffect, useState } from "react"
-import { DatePicker, message } from "antd"
+import { message } from "antd"
 import { fetchTableService } from "./api"
 import { CompletedTemplate } from "./tableTemplates/Completed"
 import { SimpleTable } from "./components/SimpleTable"
 import { PendingTemplate } from "./tableTemplates/Pending"
 
-// const { RangePicker } = DatePicker
 
-export const FarmingModule = ({ range = ["", ""] }) => {
-  // const [range, setRange] = useState(["", ""])
+export const FarmingModule = ({ range }) => {
   const [messageApi, contextHolder] = message.useMessage()
   const [data, setData] = useState({
     pending: [], inWork: [], completed: [], declined: []
@@ -25,9 +23,7 @@ export const FarmingModule = ({ range = ["", ""] }) => {
       .then((res) => setData((prev) => ({ ...prev, pending: res })))
       .catch((e) => messageApi.open({ type: "error", content: e.message }))
       .finally(() => setIsLoading((prev) => ({ ...prev, pending: false })))
-  }, [
-    // range, 
-    messageApi])
+  }, [range, messageApi])
 
   // completed
   useEffect(() => {
@@ -36,17 +32,11 @@ export const FarmingModule = ({ range = ["", ""] }) => {
       .then((res) => setData((prev) => ({ ...prev, completed: res })))
       .catch((e) => messageApi.open({ type: "error", content: e.message }))
       .finally(() => setIsLoading((prev) => ({ ...prev, completed: false })))
-  }, [
-    // range, 
-    messageApi])
+  }, [range, messageApi])
 
-  // console.log("range", range);
   return (
     <div className={css.wrapper}>
       {contextHolder}
-      {/* <RangePicker
-        format="YYYY-MM-DD"
-        onChange={(_, y) => setRange(y)} /> */}
       <SimpleTable
         title="Pending"
         template={PendingTemplate}

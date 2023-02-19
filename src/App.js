@@ -17,7 +17,7 @@ export default function App() {
         }
       }
     }}>
-      {isAuth ? <AppRouter /> : <AuthModule setIsAuth={setIsAuth} />}
+      {isAuth ? <AppRouter setIsAuth={setIsAuth} /> : <AuthModule setIsAuth={setIsAuth} />}
     </ConfigProvider>
   )
 }
