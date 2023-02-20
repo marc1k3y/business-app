@@ -4,10 +4,8 @@ import { ConfigProvider } from "antd"
 import { AuthModule } from "./modules/auth"
 import { AppRouter } from "./Router"
 
-
 export default function App() {
   const [isAuth, setIsAuth] = useState(false)
-  
   return (
     <ConfigProvider theme={{
       components: {

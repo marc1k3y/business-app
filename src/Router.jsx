@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Button, ConfigProvider, DatePicker, Layout, Menu } from "antd"
-import { useNavigate, Navigate, Route, Routes } from "react-router-dom"
+import { useNavigate, useLocation, Navigate, Route, Routes } from "react-router-dom"
 import { permissions, Roles } from "./permissions"
 import { DashboardModule } from "./modules/dashboard"
 import { FarmingModule } from "./modules/farmer"
@@ -17,6 +17,8 @@ const { RangePicker } = DatePicker
 
 export const AppRouter = ({ setIsAuth }) => {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  console.log(pathname);
   const currentRole = Roles[localStorage.getItem("roleId")]
   const [range, setRange] = useState(["", ""])
   const [collapsed, setCollapsed] = useState(true)
@@ -28,6 +30,8 @@ export const AppRouter = ({ setIsAuth }) => {
   function logoutHandler() {
     setIsAuth(false)
     localStorage.clear()
+    navigate("")
+    window.location.reload(false)
   }
 
   const links = [
@@ -52,13 +56,13 @@ export const AppRouter = ({ setIsAuth }) => {
           collapsed={collapsed}
           onCollapse={() => setCollapsed(!collapsed)}
           style={{ position: "fixed", left: 0, top: 0, bottom: 0, zIndex: 200 }} >
-          <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", margin: "10px 0" }}>
+          <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", margin: "20px 0" }}>
             <img src={logo} width="50px" alt="gl-erp" />
           </div>
           <Menu
             theme="dark"
             mode="vertical"
-            defaultSelectedKeys={"dashboard"}
+            defaultSelectedKeys={pathname.split("/")[1] || "dashboard"}
             onClick={handleMenuClick}
             items={links} />
         </Sider>
@@ -89,7 +93,7 @@ export const AppRouter = ({ setIsAuth }) => {
                   path={route.path}
                   element={route.element} />
               ))}
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              <Route path="*" element={<Navigate to={"/dashboard"} replace />} />
             </Routes>
           </Content>
         </Layout>

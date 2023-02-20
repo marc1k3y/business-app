@@ -1,16 +1,5 @@
 import { unix } from "dayjs"
-import { Roles } from "../../../permissions"
-
-
-const currentRole = Roles[localStorage.getItem("roleId")]
-function roleName() {
-  if (currentRole === "farmer") return "Buyer"
-  if (currentRole === "buyer") return "Farmer"
-}
-function roleDataIndex() {
-  if (currentRole === "farmer") return ["buyer", "fullName"]
-  if (currentRole === "buyer") return ["farmer", "fullName"]
-}
+import { roleDataIndex, roleName } from "../utils"
 
 export const PendingTemplate = [
   {
@@ -36,14 +25,14 @@ export const PendingTemplate = [
   {
     title: roleName(),
     dataIndex: roleDataIndex(),
-    render: ((inp) => inp ?? "Empty")
+    render: ((inp) => inp || "Empty")
     // width: 130
   },
   {
     title: "Description",
     dataIndex: "description",
     // width: 110,
-    render: ((inp) => inp ?? "Empty")
+    render: ((inp) => inp || "Empty")
   },
   {
     title: "Team",

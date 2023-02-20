@@ -1,5 +1,8 @@
 import axios from "axios"
-import { REACT_APP_AUTH_SERVER, REACT_APP_FARMING_SERVER, REACT_APP_STATISTIC_SERVER } from "./config"
+
+const REACT_APP_AUTH_SERVER = "https://g-identity.azurewebsites.net"
+const REACT_APP_STATISTIC_SERVER = "https://g-personinfrastructure.azurewebsites.net"
+const REACT_APP_FARMING_SERVER = "https://g-go-farming.azurewebsites.net/v2/"
 
 const $authAPI = axios.create({ baseURL: REACT_APP_AUTH_SERVER })
 const $statisticAPIjwt = axios.create({ baseURL: REACT_APP_STATISTIC_SERVER })

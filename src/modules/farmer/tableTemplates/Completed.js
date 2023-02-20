@@ -1,4 +1,5 @@
 import { unix } from "dayjs"
+import { roleDataIndex, roleName } from "../utils"
 
 export const CompletedTemplate = [
   {
@@ -46,8 +47,8 @@ export const CompletedTemplate = [
     dataIndex: ["location", "iso"],
   },
   {
-    title: "Farmer",
-    dataIndex: ["farmer", "fullName"],
+    title: roleName(),
+    dataIndex: roleDataIndex(),
     width: 130
   },
   {

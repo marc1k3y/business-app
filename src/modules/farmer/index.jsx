@@ -1,13 +1,15 @@
 import css from "./style.module.css"
 import { useEffect, useState } from "react"
-import { message } from "antd"
+import { Button, message, Modal } from "antd"
 import { fetchTableService } from "./api"
 import { CompletedTemplate } from "./tableTemplates/Completed"
 import { SimpleTable } from "./components/SimpleTable"
 import { PendingTemplate } from "./tableTemplates/Pending"
+import { CreateARForm } from "./forms/CreateAR"
 
 
 export const FarmingModule = ({ range }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [messageApi, contextHolder] = message.useMessage()
   const [data, setData] = useState({
     pending: [], inWork: [], completed: [], declined: []
@@ -15,6 +17,23 @@ export const FarmingModule = ({ range }) => {
   const [isLoading, setIsLoading] = useState({
     pending: false, inWork: false, completed: false, declined: false
   })
+
+  // MODAL
+  const showModal = () => {
+    setIsModalOpen(true)
+  }
+  const handleOk = () => {
+    setIsModalOpen(false)
+  }
+  const handleCancel = () => {
+    setIsModalOpen(false)
+  }
+  // MODAL
+
+  useEffect(() => {
+    if (!PendingTemplate[4]["dataIndex"]) window.location.reload(false)
+    if (!CompletedTemplate[9]["dataIndex"]) window.location.reload(false)
+  }, [])
 
   // pending
   useEffect(() => {
@@ -33,10 +52,15 @@ export const FarmingModule = ({ range }) => {
       .catch((e) => messageApi.open({ type: "error", content: e.message }))
       .finally(() => setIsLoading((prev) => ({ ...prev, completed: false })))
   }, [range, messageApi])
-
   return (
     <div className={css.wrapper}>
       {contextHolder}
+      <Button onClick={showModal}>
+        new ar
+      </Button>
+      <Modal title="Create Account Request" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <CreateARForm />
+      </Modal>
       <SimpleTable
         title="Pending"
         template={PendingTemplate}
