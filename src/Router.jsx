@@ -3,13 +3,14 @@ import { Button, ConfigProvider, DatePicker, Layout, Menu } from "antd"
 import { useNavigate, useLocation, Navigate, Route, Routes } from "react-router-dom"
 import { permissions, Roles } from "./permissions"
 import { DashboardModule } from "./modules/dashboard"
-import { FarmingModule } from "./modules/farmer"
+import { FarmingModule } from "./modules/farming"
 import {
   DashboardOutlined,
   AccountBookOutlined,
 } from "@ant-design/icons"
 import logo from "./assets/logo.png"
 import { Header } from "antd/es/layout/layout"
+// import { FarmModule } from "./modules/farm"
 
 
 const { Content, Sider } = Layout
@@ -42,6 +43,7 @@ export const AppRouter = ({ setIsAuth }) => {
   const routes = [
     { source: "dashboard", path: "/dashboard", element: <DashboardModule /> },
     { source: "farming", path: "/farming", element: <FarmingModule range={range} /> },
+    // { source: "farming", path: "/farming", element: <FarmModule /> },
   ]
   console.log("Log from Router.jsx, currentRole:", currentRole);
   return (
