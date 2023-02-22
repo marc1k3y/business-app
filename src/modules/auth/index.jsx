@@ -17,12 +17,12 @@ export const AuthModule = ({ setIsAuth }) => {
   const { token } = useToken()
 
   function loginHandler() {
-    if (remember) {
-      localStorage.setItem("authData", JSON.stringify(authData))
-    }
     setLoading(true)
     loginService(authData)
-      .then(() => setIsAuth(true))
+      .then(() => {
+        setIsAuth(true)
+        remember && localStorage.setItem("authData", JSON.stringify(authData))
+      })
       .catch((e) => messageApi.open({ type: "error", content: e.message }))
       .finally(() => setLoading(false))
   }
@@ -38,6 +38,7 @@ export const AuthModule = ({ setIsAuth }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   return (
     <div className={css.wrapper}>
       {contextHolder}
@@ -49,15 +50,17 @@ export const AuthModule = ({ setIsAuth }) => {
           size="large"
           placeholder="some@mail.ru"
           prefix={<UserOutlined />}
-          value={authData.email}
-          onChange={(e) => setAuthData((prev) => ({ ...prev, email: e.target.value }))} />
+        value={authData.email}
+        onChange={(e) => setAuthData((prev) => ({ ...prev, email: e.target.value }))} 
+        />
         <Input.Password
           disabled={loading}
           size="large"
           placeholder="StrongPassword"
-          value={authData.password}
           prefix={<LockOutlined />}
-          onChange={(e) => setAuthData((prev) => ({ ...prev, password: e.target.value }))} />
+        value={authData.password}
+        onChange={(e) => setAuthData((prev) => ({ ...prev, password: e.target.value }))} 
+        />
         <Checkbox
           className={css.checkbox}
           checked={remember}

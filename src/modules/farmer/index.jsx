@@ -1,7 +1,7 @@
 import css from "./style.module.css"
 import { useEffect, useState } from "react"
 import { Button, message, Modal } from "antd"
-import { fetchTableService } from "./api"
+import { createAccountRequestService, fetchTableService } from "./api"
 import { CompletedTemplate } from "./tableTemplates/Completed"
 import { SimpleTable } from "./components/SimpleTable"
 import { PendingTemplate } from "./tableTemplates/Pending"
@@ -17,13 +17,23 @@ export const FarmingModule = ({ range }) => {
   const [isLoading, setIsLoading] = useState({
     pending: false, inWork: false, completed: false, declined: false
   })
+  const [requestData, setRequestData] = useState({
+    quantity: 0, price: 0,
+    currencyID: "", typeID: "Select type", locationID: "Select country",
+    description: ""
+  })
 
   // MODAL
   const showModal = () => {
     setIsModalOpen(true)
   }
   const handleOk = () => {
-    setIsModalOpen(false)
+    createAccountRequestService(requestData)
+      .then((res) => {
+        messageApi.open({ type: "success", content: res })
+        setIsModalOpen(false)
+      })
+      .catch((e) => messageApi.open({ type: "error", content: e.message }))
   }
   const handleCancel = () => {
     setIsModalOpen(false)
@@ -59,7 +69,7 @@ export const FarmingModule = ({ range }) => {
         new ar
       </Button>
       <Modal title="Create Account Request" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <CreateARForm />
+        <CreateARForm requestData={requestData} setRequestData={setRequestData} />
       </Modal>
       <SimpleTable
         title="Pending"
