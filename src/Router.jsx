@@ -7,10 +7,11 @@ import { FarmingModule } from "./modules/farming"
 import {
   DashboardOutlined,
   AccountBookOutlined,
+  BookOutlined
 } from "@ant-design/icons"
 import logo from "./assets/logo.png"
 import { Header } from "antd/es/layout/layout"
-// import { FarmModule } from "./modules/farm"
+import { FarmModule } from "./modules/farm"
 
 
 const { Content, Sider } = Layout
@@ -38,12 +39,13 @@ export const AppRouter = ({ setIsAuth }) => {
   const links = [
     { key: "dashboard", icon: <DashboardOutlined />, label: "Dashboard" },
     { key: "farming", icon: <AccountBookOutlined />, label: "Farming" },
+    { key: "farming1", icon: <BookOutlined />, label: "Farmer" }
   ].filter((link) => (permissions[link.key].access.includes(currentRole)))
 
   const routes = [
     { source: "dashboard", path: "/dashboard", element: <DashboardModule /> },
     { source: "farming", path: "/farming", element: <FarmingModule range={range} /> },
-    // { source: "farming", path: "/farming", element: <FarmModule /> },
+    { source: "farming1", path: "/farming1", element: <FarmModule /> },
   ]
   console.log("Log from Router.jsx, currentRole:", currentRole);
   return (
