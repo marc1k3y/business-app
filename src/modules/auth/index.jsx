@@ -21,7 +21,8 @@ export const AuthModule = ({ setIsAuth }) => {
     loginService(authData)
       .then(() => {
         setIsAuth(true)
-        remember && localStorage.setItem("authData", JSON.stringify(authData))
+        localStorage.setItem("authData", JSON.stringify(authData))
+        localStorage.setItem("remember", remember)
       })
       .catch((e) => messageApi.open({ type: "error", content: e.message }))
       .finally(() => setLoading(false))
@@ -29,7 +30,7 @@ export const AuthModule = ({ setIsAuth }) => {
 
   useEffect(() => {
     const cacheData = JSON.parse(localStorage.getItem("authData"))
-    if (cacheData?.email && cacheData?.password) {
+    if (JSON.parse(localStorage.getItem("remember"))) {
       setLoading(true)
       loginService(cacheData)
         .then(() => setIsAuth(true))
@@ -50,16 +51,16 @@ export const AuthModule = ({ setIsAuth }) => {
           size="large"
           placeholder="some@mail.ru"
           prefix={<UserOutlined />}
-        value={authData.email}
-        onChange={(e) => setAuthData((prev) => ({ ...prev, email: e.target.value }))} 
+          value={authData.email}
+          onChange={(e) => setAuthData((prev) => ({ ...prev, email: e.target.value }))}
         />
         <Input.Password
           disabled={loading}
           size="large"
           placeholder="StrongPassword"
           prefix={<LockOutlined />}
-        value={authData.password}
-        onChange={(e) => setAuthData((prev) => ({ ...prev, password: e.target.value }))} 
+          value={authData.password}
+          onChange={(e) => setAuthData((prev) => ({ ...prev, password: e.target.value }))}
         />
         <Checkbox
           className={css.checkbox}
