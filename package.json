@@ -1,5 +1,6 @@
 {
   "name": "business-app",
+  "homepage": "https://marc1k3y.github.io/business-app/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
