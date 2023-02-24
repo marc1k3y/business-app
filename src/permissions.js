@@ -20,4 +20,12 @@ export const permissions = {
       farmer: ["read", "write", "create"]
     }
   },
+  test: {
+    access: ["owner", "buyer", "farmer"],
+    actions: {
+      owner: ["read", "write", "create"],
+      buyer: ["read", "write", "create"],
+      farmer: ["read", "write", "create"]
+    }
+  },
 }
