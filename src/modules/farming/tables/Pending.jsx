@@ -90,6 +90,7 @@ export const PendingTable = ({ data, isLoading }) => {
       align: "center",
       title: "Amount",
       dataIndex: "quantity",
+      editable: true
     },
     {
       align: "center",

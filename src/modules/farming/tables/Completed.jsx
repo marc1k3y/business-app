@@ -96,16 +96,19 @@ export const CompletedTable = ({ data, isLoading }) => {
       align: "center",
       title: "Amount",
       dataIndex: "quantity",
+      editable: true
     },
     {
       align: "center",
       title: "Valids",
       dataIndex: "valid",
+      editable: true
     },
     {
       align: "center",
       title: "Price",
       dataIndex: "price",
+      editable: true
     },
     {
       align: "center",

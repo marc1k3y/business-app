@@ -13,6 +13,7 @@
 
 # test
 /src/modules/passwordManager
+/src/modules/farming-depr
 
 # misc
 .DS_Store

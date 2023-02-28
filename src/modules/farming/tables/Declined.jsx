@@ -85,6 +85,7 @@ export const DeclinedTable = ({ data, isLoading }) => {
       align: "center",
       title: "Amount",
       dataIndex: "quantity",
+      editable: true
     },
     {
       align: "center",
@@ -104,7 +105,8 @@ export const DeclinedTable = ({ data, isLoading }) => {
     {
       align: "center",
       title: "Cancellation cause",
-      dataIndex: "cancellationCause"
+      dataIndex: "cancellationCause",
+      editable: true
     },
     {
       width: editingKey.length ? 150 : 80,
