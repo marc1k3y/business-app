@@ -91,25 +91,25 @@ export const FarmingModule = ({ range }) => {
       <Modal title="Create Account Request" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <CreateARForm requestData={requestData} setRequestData={setRequestData} />
       </Modal>
-      <SimpleTable
+      {data.pending.length > 0 && <SimpleTable
         title="Pending"
         template={PendingTemplate}
         data={data.pending}
-        isLoading={isLoading.pending} />
-      <SimpleTable
+        isLoading={isLoading.pending} />}
+      {data.completed.length > 0 && <SimpleTable
         title="Completed"
         template={CompletedTemplate}
         data={data.completed}
-        isLoading={isLoading.completed} />
+        isLoading={isLoading.completed} />}
       {data.inWork.length > 0 && <SimpleTable
         title="In work"
         template={InWorkTemplate}
         data={data.inWork}
         isLoading={isLoading.inWork} />}
-      <SimpleTable
+      {data.declined.length > 0 && <SimpleTable
         title="Declined"
         template={DeclinedTemplate}
         data={data.declined}
-        isLoading={isLoading.declined} />
+        isLoading={isLoading.declined} />}
     </div>)
 }

@@ -1,5 +1,3 @@
-import "../../App.css"
-
 import { Button, Form, Input, InputNumber, Popconfirm, Table } from "antd"
 import { useEffect, useState } from "react"
 import { fetchTableService } from "../farming/api"
@@ -57,7 +55,6 @@ export const FarmModule = () => {
   const [editingKey, setEditingKey] = useState("")
   const isEditing = (record) => record._id === editingKey
   const edit = (record) => {
-    console.log(record);
     form.setFieldsValue({
       quanity: "",
       valid: "",

@@ -2,16 +2,16 @@ import { useState } from "react"
 import { Button, ConfigProvider, DatePicker, Layout, Menu } from "antd"
 import { useNavigate, useLocation, Navigate, Route, Routes } from "react-router-dom"
 import { permissions, Roles } from "./permissions"
-import { DashboardModule } from "./modules/dashboard"
 import { FarmingModule } from "./modules/farming"
 import {
-  DashboardOutlined,
+  ProfileOutlined,
   AccountBookOutlined,
   BookOutlined
 } from "@ant-design/icons"
 import logo from "./assets/logo.png"
 import { Header } from "antd/es/layout/layout"
 import { FarmModule } from "./modules/farm"
+import { ProfileModule } from "./modules/profile"
 
 
 const { Content, Sider } = Layout
@@ -37,13 +37,13 @@ export const AppRouter = ({ setIsAuth }) => {
   }
 
   const links = [
-    { key: "dashboard", icon: <DashboardOutlined />, label: "Dashboard" },
+    { key: "profile", icon: <ProfileOutlined />, label: "Profile" },
     { key: "farming", icon: <AccountBookOutlined />, label: "Farming" },
     { key: "test", icon: <BookOutlined />, label: "Test" }
   ].filter((link) => (permissions[link.key].access.includes(currentRole)))
 
   const routes = [
-    { source: "dashboard", path: "/dashboard", element: <DashboardModule /> },
+    { source: "profile", path: "/profile", element: <ProfileModule /> },
     { source: "farming", path: "/farming", element: <FarmingModule range={range} /> },
     { source: "test", path: "/test", element: <FarmModule /> },
   ]
@@ -66,7 +66,7 @@ export const AppRouter = ({ setIsAuth }) => {
           <Menu
             theme="dark"
             mode="vertical"
-            defaultSelectedKeys={pathname.split("/")[1] || "dashboard"}
+            defaultSelectedKeys={pathname.split("/")[1] || "profile"}
             onClick={handleMenuClick}
             items={links} />
         </Sider>
@@ -97,7 +97,7 @@ export const AppRouter = ({ setIsAuth }) => {
                   path={route.path}
                   element={route.element} />
               ))}
-              <Route path="*" element={<Navigate to={"/dashboard"} replace />} />
+              <Route path="*" element={<Navigate to={"/profile"} replace />} />
             </Routes>
           </Content>
         </Layout>

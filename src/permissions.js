@@ -4,7 +4,7 @@ export const Roles = {
   6: "farmer"
 }
 export const permissions = {
-  dashboard: {
+  profile: {
     access: ["owner", "buyer", "farmer"],
     actions: {
       owner: ["read", "write", "create"],
