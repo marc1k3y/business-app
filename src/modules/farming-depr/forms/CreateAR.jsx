@@ -1,7 +1,7 @@
 import { Col, Form, Input, InputNumber, message, Row, Select, Upload } from "antd"
 import { InboxOutlined } from "@ant-design/icons"
 import { useEffect, useState } from "react"
-import { getCurrencies, getAccountsTypes, getLocations } from "../api"
+import { getCurrencies, getAccountsTypes, getLocations, createAccountRequestService } from "../api"
 
 const { Dragger } = Upload
 

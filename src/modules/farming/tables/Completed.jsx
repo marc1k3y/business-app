@@ -1,8 +1,8 @@
-import { Button, Form, Input, InputNumber, Popconfirm, Table } from "antd"
 import { useEffect, useState } from "react"
-import { fetchTableService } from "../farming/api"
 import { unix } from "dayjs"
-import { roleDataIndex, roleName } from "../farming/utils"
+import { Button, Form, Input, InputNumber, Popconfirm, Table } from "antd"
+import { TableTitle } from "../components/TableTitle"
+import { Roles } from "../../../permissions"
 
 const EditableCell = ({
   editing,
@@ -20,38 +20,18 @@ const EditableCell = ({
       {editing ? (
         <Form.Item
           name={dataIndex}
-          style={{
-            margin: 0,
-          }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-        >
+          style={{ margin: 0 }}
+          rules={[{ required: true, message: `Please Input ${title}!` }]}>
           {inputNode}
         </Form.Item>
-      ) : (
-        children
-      )}
+      ) : (children)}
     </td>
   )
 }
-export const FarmModule = () => {
+export const CompletedTable = ({ data, isLoading }) => {
   const [form] = Form.useForm()
-  const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState([])
-  useEffect(() => {
-    setIsLoading(true)
-    // fetchTableService({ status: "2", startDate: range[0], endDate: range[1] })
-    fetchTableService({ status: "2", startDate: "", endDate: "" })
-      .then((res) => setData(res))
-      // .catch((e) => messageApi.open({ type: "error", content: e.message }))
-      .finally(() => setIsLoading(false))
-  }, [
-    // range, messageApi
-  ])
+  const [roleName, setRoleName] = useState("")
+  const [roleDataIndex, setRoleDataIndex] = useState([])
   const [editingKey, setEditingKey] = useState("")
   const isEditing = (record) => record._id === editingKey
   const edit = (record) => {
@@ -67,6 +47,14 @@ export const FarmModule = () => {
   const cancel = () => {
     setEditingKey("")
   }
+
+  useEffect(() => {
+    const currentRole = Roles[localStorage.getItem("roleId")]
+    if (currentRole === "farmer") setRoleName("Buyer")
+    if (currentRole === "buyer") setRoleName("Farmer")
+    if (currentRole === "farmer") setRoleDataIndex(["buyer", "fullName"])
+    if (currentRole === "buyer") setRoleDataIndex(["farmer", "fullName"])
+  }, [])
   const save = async (key) => {
     try {
       const row = await form.validateFields()
@@ -78,11 +66,11 @@ export const FarmModule = () => {
           ...item,
           ...row,
         })
-        setData(newData)
+        // setData(newData)
         setEditingKey("")
       } else {
         newData.push(row)
-        setData(newData)
+        // setData(newData)
         setEditingKey("")
       }
     } catch (errInfo) {
@@ -91,14 +79,14 @@ export const FarmModule = () => {
   }
   const columns = [
     {
-      width: 100,
+      width: 120,
+      fixed: "left",
       align: "center",
       title: "Date created",
       dataIndex: "dateCreated",
       render: ((date) => unix(date).format("DD-MM-YY"))
     },
     {
-      width: 120,
       align: "center",
       title: "Date completed",
       dataIndex: "dateCompleted",
@@ -106,27 +94,23 @@ export const FarmModule = () => {
     },
     {
       align: "center",
-      title: "Quantity",
+      title: "Amount",
       dataIndex: "quantity",
-      editable: true
     },
     {
       align: "center",
       title: "Valids",
       dataIndex: "valid",
-      editable: true
     },
     {
       align: "center",
       title: "Price",
       dataIndex: "price",
-      editable: true
     },
     {
       align: "center",
       title: "Total",
       dataIndex: "total",
-      editable: true
     },
     {
       align: "center",
@@ -134,7 +118,6 @@ export const FarmModule = () => {
       dataIndex: ["currency", "iso"],
     },
     {
-      width: 110,
       align: "center",
       title: "Account type",
       dataIndex: ["type", "name"],
@@ -145,13 +128,11 @@ export const FarmModule = () => {
       dataIndex: ["location", "iso"],
     },
     {
-      width: 130,
       align: "center",
-      title: roleName(),
-      dataIndex: roleDataIndex(),
+      title: roleName,
+      dataIndex: roleDataIndex,
     },
     {
-      width: 110,
       align: "center",
       title: "Description",
       dataIndex: "description",
@@ -178,8 +159,7 @@ export const FarmModule = () => {
               onClick={() => save(record.key)}
               style={{
                 marginRight: 8,
-              }}
-            >
+              }}>
               Save
             </Button>
             <Popconfirm title="Sure to cancel?" onConfirm={cancel} placement="left">
@@ -203,7 +183,7 @@ export const FarmModule = () => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: col.dataIndex === "age" ? "number" : "text",
+        inputType: typeof (col.dataIndex) === "string" ? "text" : "number",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -213,22 +193,17 @@ export const FarmModule = () => {
   return (
     <Form form={form} component={false}>
       <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        loading={isLoading}
         bordered
+        size="small"
+        pagination={false}
+        title={() => <TableTitle text="Completed" />}
+        components={{ body: { cell: EditableCell } }}
+        loading={isLoading}
         dataSource={data}
         columns={mergedColumns}
         rowKey={(record) => record._id}
         rowClassName="editable-row"
-        pagination={{
-          onChange: cancel,
-        }}
-        scroll={{ x: 1300 }}
-      />
+        scroll={{ x: 1300 }} />
     </Form>
   )
 }

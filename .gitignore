@@ -11,6 +11,9 @@
 # production
 /build
 
+# test
+/src/modules/passwordManager
+
 # misc
 .DS_Store
 .env.local

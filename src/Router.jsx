@@ -2,16 +2,14 @@ import { useState } from "react"
 import { Button, ConfigProvider, DatePicker, Layout, Menu } from "antd"
 import { useNavigate, useLocation, Navigate, Route, Routes } from "react-router-dom"
 import { permissions, Roles } from "./permissions"
-import { FarmingModule } from "./modules/farming"
 import {
   ProfileOutlined,
   AccountBookOutlined,
-  BookOutlined
 } from "@ant-design/icons"
 import logo from "./assets/logo.png"
 import { Header } from "antd/es/layout/layout"
-import { FarmModule } from "./modules/farm"
 import { ProfileModule } from "./modules/profile"
+import { FarmingModule } from "./modules/farming"
 
 
 const { Content, Sider } = Layout
@@ -20,7 +18,6 @@ const { RangePicker } = DatePicker
 export const AppRouter = ({ setIsAuth }) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  console.log(pathname);
   const currentRole = Roles[localStorage.getItem("roleId")]
   const [range, setRange] = useState(["", ""])
   const [collapsed, setCollapsed] = useState(true)
@@ -33,19 +30,16 @@ export const AppRouter = ({ setIsAuth }) => {
     setIsAuth(false)
     localStorage.clear()
     navigate("")
-    window.location.reload(false)
   }
 
   const links = [
     { key: "profile", icon: <ProfileOutlined />, label: "Profile" },
     { key: "farming", icon: <AccountBookOutlined />, label: "Farming" },
-    { key: "test", icon: <BookOutlined />, label: "Test" }
   ].filter((link) => (permissions[link.key].access.includes(currentRole)))
 
   const routes = [
     { source: "profile", path: "/profile", element: <ProfileModule /> },
     { source: "farming", path: "/farming", element: <FarmingModule range={range} /> },
-    { source: "test", path: "/test", element: <FarmModule /> },
   ]
   console.log("Log from Router.jsx, currentRole:", currentRole);
   return (
@@ -73,7 +67,8 @@ export const AppRouter = ({ setIsAuth }) => {
         <Layout>
           <Header style={{ position: "fixed", top: 0, left: 80, right: 0, zIndex: 199, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 10px 0 20px" }}>
             <RangePicker
-              size="large"
+              size="small"
+              style={{ width: 200 }}
               format="YYYY-MM-DD"
               onChange={(_, y) => setRange(y)} />
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>

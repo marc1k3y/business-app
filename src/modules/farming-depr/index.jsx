@@ -2,11 +2,12 @@ import css from "./style.module.css"
 import { useEffect, useState } from "react"
 import { Button, message, Modal } from "antd"
 import { createAccountRequestService, fetchTableService } from "./api"
+import { CompletedTemplate } from "./tableTemplates/Completed"
 import { CreateARForm } from "./forms/CreateAR"
-import { PendingTable } from "./tables/Pending"
-import { InWorkTable } from "./tables/InWork"
-import { DeclinedTable } from "./tables/Declined"
-import { CompletedTable } from "./tables/Completed"
+import { PendingTemplate } from "./tableTemplates/Pending"
+import { DeclinedTemplate } from "./tableTemplates/Declined"
+import { InWorkTemplate } from "./tableTemplates/InWork"
+import { SimpleTable } from "./components/SimpleTable"
 
 
 export const FarmingModule = ({ range }) => {
@@ -41,10 +42,10 @@ export const FarmingModule = ({ range }) => {
   }
   // MODAL
 
-  // useEffect(() => {
-  //   if (!PendingTemplate[4]["dataIndex"]) window.location.reload(false)
-  //   if (!CompletedTemplate[9]["dataIndex"]) window.location.reload(false)
-  // }, [])
+  useEffect(() => {
+    if (!PendingTemplate[4]["dataIndex"]) window.location.reload(false)
+    if (!CompletedTemplate[9]["dataIndex"]) window.location.reload(false)
+  }, [])
 
   // pending
   useEffect(() => {
@@ -90,13 +91,25 @@ export const FarmingModule = ({ range }) => {
       <Modal title="Create Account Request" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <CreateARForm requestData={requestData} setRequestData={setRequestData} />
       </Modal>
-      {data.pending.length > 0 &&
-        <PendingTable data={data.pending} isLoading={isLoading.pending} />}
-      {data.inWork.length > 0 &&
-        <InWorkTable data={data.inWork} isLoading={isLoading.inWork} />}
-      {data.completed.length > 0 &&
-        <CompletedTable data={data.completed} isLoading={isLoading.completed} />}
-      {data.declined.length > 0 &&
-        <DeclinedTable data={data.declined} isLoading={isLoading.declined} />}
+      <SimpleTable
+        title="Pending"
+        template={PendingTemplate}
+        data={data.pending}
+        isLoading={isLoading.pending} />
+      <SimpleTable
+        title="Completed"
+        template={CompletedTemplate}
+        data={data.completed}
+        isLoading={isLoading.completed} />
+      {data.inWork.length > 0 && <SimpleTable
+        title="In work"
+        template={InWorkTemplate}
+        data={data.inWork}
+        isLoading={isLoading.inWork} />}
+      <SimpleTable
+        title="Declined"
+        template={DeclinedTemplate}
+        data={data.declined}
+        isLoading={isLoading.declined} />
     </div>)
 }
