@@ -6,6 +6,8 @@ import { CompletedTemplate } from "./tableTemplates/Completed"
 import { SimpleTable } from "./components/SimpleTable"
 import { PendingTemplate } from "./tableTemplates/Pending"
 import { CreateARForm } from "./forms/CreateAR"
+import { InWorkTemplate } from "./tableTemplates/InWork"
+import { DeclinedTemplate } from "./tableTemplates/Declined"
 
 
 export const FarmingModule = ({ range }) => {
@@ -50,8 +52,17 @@ export const FarmingModule = ({ range }) => {
     setIsLoading((prev) => ({ ...prev, pending: true }))
     fetchTableService({ status: "0", startDate: range[0], endDate: range[1] })
       .then((res) => setData((prev) => ({ ...prev, pending: res })))
-      .catch((e) => messageApi.open({ type: "error", content: e.message }))
+      .catch((e) => messageApi.open({ type: "info", content: `Pending ${e.response.data}` }))
       .finally(() => setIsLoading((prev) => ({ ...prev, pending: false })))
+  }, [range, messageApi])
+
+  // in work
+  useEffect(() => {
+    setIsLoading((prev) => ({ ...prev, inWork: true }))
+    fetchTableService({ status: "1", startDate: range[0], endDate: range[1] })
+      .then((res) => setData((prev) => ({ ...prev, inWork: res })))
+      .catch((e) => messageApi.open({ type: "info", content: `In work ${e.response.data}` }))
+      .finally(() => setIsLoading((prev) => ({ ...prev, inWork: false })))
   }, [range, messageApi])
 
   // completed
@@ -59,8 +70,17 @@ export const FarmingModule = ({ range }) => {
     setIsLoading((prev) => ({ ...prev, completed: true }))
     fetchTableService({ status: "2", startDate: range[0], endDate: range[1] })
       .then((res) => setData((prev) => ({ ...prev, completed: res })))
-      .catch((e) => messageApi.open({ type: "error", content: e.message }))
+      .catch((e) => messageApi.open({ type: "info", content: `Completed ${e.response.data}` }))
       .finally(() => setIsLoading((prev) => ({ ...prev, completed: false })))
+  }, [range, messageApi])
+
+  // declined
+  useEffect(() => {
+    setIsLoading((prev) => ({ ...prev, declined: true }))
+    fetchTableService({ status: "3", startDate: range[0], endDate: range[1] })
+      .then((res) => setData((prev) => ({ ...prev, declined: res })))
+      .catch((e) => messageApi.open({ type: "info", content: `Declined ${e.response.data}` }))
+      .finally(() => setIsLoading((prev) => ({ ...prev, declined: false })))
   }, [range, messageApi])
   return (
     <div className={css.wrapper}>
@@ -81,5 +101,15 @@ export const FarmingModule = ({ range }) => {
         template={CompletedTemplate}
         data={data.completed}
         isLoading={isLoading.completed} />
+      {data.inWork.length > 0 && <SimpleTable
+        title="In work"
+        template={InWorkTemplate}
+        data={data.inWork}
+        isLoading={isLoading.inWork} />}
+      <SimpleTable
+        title="Declined"
+        template={DeclinedTemplate}
+        data={data.declined}
+        isLoading={isLoading.declined} />
     </div>)
 }

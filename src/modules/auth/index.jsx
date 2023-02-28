@@ -66,14 +66,14 @@ export const AuthModule = ({ setIsAuth }) => {
           className={css.checkbox}
           checked={remember}
           onChange={() => setRemember(!remember)}>
-          Запомнить меня
+          Remember
         </Checkbox>
         <Button
           type="primary"
           htmlType="submit"
           loading={loading}
           style={{ backgroundColor: token.Button.colorPrimaryBg, boxShadow: token.Button.boxShadow }}>
-          {loading ? "Идет вход.." : "Войти"}
+          {loading ? "Entering.." : "Enter"}
         </Button>
       </Form>
     </div>
