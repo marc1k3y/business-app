@@ -28,7 +28,7 @@ const EditableCell = ({
     </td>
   )
 }
-export const InWorkTable = ({ data, isLoading }) => {
+export const InWorkTable = ({ data, setData, isLoading, actionsAccess }) => {
   const [form] = Form.useForm()
   const [roleName, setRoleName] = useState("")
   const [roleDataIndex, setRoleDataIndex] = useState([])
@@ -66,11 +66,11 @@ export const InWorkTable = ({ data, isLoading }) => {
           ...item,
           ...row,
         })
-        // setData(newData)
+        setData((prev) => ({ ...prev, inWork: newData }))
         setEditingKey("")
       } else {
         newData.push(row)
-        // setData(newData)
+        setData((prev) => ({ ...prev, inWork: newData }))
         setEditingKey("")
       }
     } catch (errInfo) {
@@ -125,27 +125,32 @@ export const InWorkTable = ({ data, isLoading }) => {
       title: "Actions",
       dataIndex: "operation",
       render: (_, record) => {
-        const editable = isEditing(record)
-        return editable ? (
-          <span>
+        if (actionsAccess.edit) {
+          const editable = isEditing(record)
+          return editable ? (
+            <span>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => save(record.key)}
+                style={{
+                  marginRight: 8,
+                }}>
+                Save
+              </Button>
+              <Popconfirm title="Sure to cancel?" onConfirm={cancel} placement="left">
+                <Button size="small" danger>Cancel</Button>
+              </Popconfirm>
+            </span>
+          ) : (
             <Button
-              size="small"
-              type="primary"
-              onClick={() => save(record.key)}
-              style={{
-                marginRight: 8,
-              }}>
-              Save
+              size="small" disabled={editingKey !== ""} onClick={() => edit(record)}>
+              Edit
             </Button>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel} placement="left">
-              <Button size="small" danger>Cancel</Button>
-            </Popconfirm>
-          </span>
-        ) : (
-          <Button
-            size="small" disabled={editingKey !== ""} onClick={() => edit(record)}>
-            Edit
-          </Button>
+          )
+        }
+        return (
+          <Button size="small" type="link">link</Button>
         )
       },
     },

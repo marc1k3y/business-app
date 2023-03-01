@@ -15,9 +15,9 @@ export const permissions = {
   farming: {
     access: ["owner", "buyer", "farmer"],
     actions: {
-      owner: ["read", "write", "create"],
-      buyer: ["read", "write", "create"],
-      farmer: ["read", "write", "create"]
+      owner: ["read", "edit", "create"],
+      buyer: ["read", "create"],
+      farmer: ["read", "edit", "create"]
     }
   }
 }

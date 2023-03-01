@@ -7,9 +7,14 @@ import { PendingTable } from "./tables/Pending"
 import { InWorkTable } from "./tables/InWork"
 import { DeclinedTable } from "./tables/Declined"
 import { CompletedTable } from "./tables/Completed"
+import { permissions, Roles } from "../../permissions"
 
 
 export const FarmingModule = ({ range }) => {
+  const currentRole = Roles[localStorage.getItem("roleId")]
+  const [actionsAccess, setActionsAccess] = useState({
+    edit: false, create: false
+  })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [messageApi, contextHolder] = message.useMessage()
   const [data, setData] = useState({
@@ -23,6 +28,16 @@ export const FarmingModule = ({ range }) => {
     currencyID: "", typeID: "Select type", locationID: "Select country",
     description: ""
   })
+
+  // actions access
+  useEffect(() => {
+    if (permissions.farming.actions[currentRole].includes("edit")) {
+      setActionsAccess((prev) => ({ ...prev, edit: true, showActions: true }))
+    }
+    if (permissions.farming.actions[currentRole].includes("create")) {
+      setActionsAccess((prev) => ({ ...prev, create: true }))
+    }
+  }, [currentRole])
 
   // MODAL
   const showModal = () => {
@@ -40,11 +55,6 @@ export const FarmingModule = ({ range }) => {
     setIsModalOpen(false)
   }
   // MODAL
-
-  // useEffect(() => {
-  //   if (!PendingTemplate[4]["dataIndex"]) window.location.reload(false)
-  //   if (!CompletedTemplate[9]["dataIndex"]) window.location.reload(false)
-  // }, [])
 
   // pending
   useEffect(() => {
@@ -91,12 +101,12 @@ export const FarmingModule = ({ range }) => {
         <CreateARForm requestData={requestData} setRequestData={setRequestData} />
       </Modal>
       {data.pending.length > 0 &&
-        <PendingTable data={data.pending} isLoading={isLoading.pending} />}
+        <PendingTable data={data.pending} setData={setData} isLoading={isLoading.pending} actionsAccess={actionsAccess} />}
       {data.inWork.length > 0 &&
-        <InWorkTable data={data.inWork} isLoading={isLoading.inWork} />}
+        <InWorkTable data={data.inWork} setData={setData} isLoading={isLoading.inWork} actionsAccess={actionsAccess} />}
       {data.completed.length > 0 &&
-        <CompletedTable data={data.completed} isLoading={isLoading.completed} />}
+        <CompletedTable data={data.completed} setData={setData} isLoading={isLoading.completed} actionsAccess={actionsAccess} />}
       {data.declined.length > 0 &&
-        <DeclinedTable data={data.declined} isLoading={isLoading.declined} />}
+        <DeclinedTable data={data.declined} setData={setData} isLoading={isLoading.declined} actionsAccess={actionsAccess} />}
     </div>)
 }

@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react"
 import { unix } from "dayjs"
-import { Button, Form, Input, InputNumber, Popconfirm, Table } from "antd"
+import {
+  Button,
+  // Dropdown, 
+  Form, Input, InputNumber, Popconfirm, Table
+} from "antd"
 import { TableTitle } from "../components/TableTitle"
 import { Roles } from "../../../permissions"
 
@@ -28,7 +32,7 @@ const EditableCell = ({
     </td>
   )
 }
-export const CompletedTable = ({ data, isLoading }) => {
+export const CompletedTable = ({ data, setData, isLoading, actionsAccess }) => {
   const [form] = Form.useForm()
   const [roleName, setRoleName] = useState("")
   const [roleDataIndex, setRoleDataIndex] = useState([])
@@ -48,6 +52,29 @@ export const CompletedTable = ({ data, isLoading }) => {
     setEditingKey("")
   }
 
+  // function getActions() {
+  //   return [
+  //     {
+  //       key: '1',
+  //       label: (
+  //         <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+  //           1st menu item
+  //         </a>
+  //       ),
+  //     },
+  //     {
+  //       key: '2',
+  //       label: (
+  //         <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
+  //           2nd menu item (disabled)
+  //         </a>
+  //       ),
+  //       // icon: <SmileOutlined />,
+  //       disabled: true,
+  //     }
+  //   ]
+  // }
+
   useEffect(() => {
     const currentRole = Roles[localStorage.getItem("roleId")]
     if (currentRole === "farmer") setRoleName("Buyer")
@@ -66,11 +93,11 @@ export const CompletedTable = ({ data, isLoading }) => {
           ...item,
           ...row,
         })
-        // setData(newData)
+        setData((prev) => ({ ...prev, completed: newData }))
         setEditingKey("")
       } else {
         newData.push(row)
-        // setData(newData)
+        setData((prev) => ({ ...prev, completed: newData }))
         setEditingKey("")
       }
     } catch (errInfo) {
@@ -153,28 +180,33 @@ export const CompletedTable = ({ data, isLoading }) => {
       title: "Actions",
       dataIndex: "operation",
       render: (_, record) => {
-        const editable = isEditing(record)
-        return editable ? (
-          <span>
+        if (actionsAccess.edit) {
+          const editable = isEditing(record)
+          return editable ? (
+            <span>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => save(record.key)}
+                style={{ marginRight: 8 }}>
+                Save
+              </Button>
+              <Popconfirm title="Sure to cancel?" onConfirm={cancel} placement="left">
+                <Button size="small" danger>Cancel</Button>
+              </Popconfirm>
+            </span>
+          ) : (
             <Button
-              size="small"
-              type="primary"
-              onClick={() => save(record.key)}
-              style={{
-                marginRight: 8,
-              }}>
-              Save
+              size="small" disabled={editingKey !== ""} onClick={() => edit(record)}>
+              Edit
             </Button>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel} placement="left">
-              <Button size="small" danger>Cancel</Button>
-            </Popconfirm>
-          </span>
-        ) : (
-          <Button
-            size="small" disabled={editingKey !== ""} onClick={() => edit(record)}>
-            Edit
-          </Button>
-        )
+          )
+        }
+        // return (
+        //   <Dropdown menu={{ items: getActions() }}>
+        //     <Button size="small" type="link">more</Button>
+        //   </Dropdown>
+        // )
       },
     },
   ]
@@ -189,7 +221,7 @@ export const CompletedTable = ({ data, isLoading }) => {
         inputType: typeof (col.dataIndex) === "string" ? "text" : "number",
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record),
+        editing: isEditing(record)
       }),
     }
   })
