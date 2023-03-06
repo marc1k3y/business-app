@@ -3,10 +3,11 @@ import { unix } from "dayjs"
 import {
   Button,
   // Dropdown, 
-  Form, Input, InputNumber, Popconfirm, Table
+  Form, Input, InputNumber, message, Popconfirm, Table
 } from "antd"
 import { TableTitle } from "../components/TableTitle"
 import { Roles } from "../../../permissions"
+import { updateAccountRequestService } from "../api"
 
 const EditableCell = ({
   editing,
@@ -40,7 +41,7 @@ export const CompletedTable = ({ data, setData, isLoading, actionsAccess }) => {
   const isEditing = (record) => record._id === editingKey
   const edit = (record) => {
     form.setFieldsValue({
-      quanity: "",
+      quantity: "",
       valid: "",
       price: "",
       total: "",
@@ -50,6 +51,26 @@ export const CompletedTable = ({ data, setData, isLoading, actionsAccess }) => {
   }
   const cancel = () => {
     setEditingKey("")
+  }
+
+  function updateAccountRequestHandler(ar, row) {
+    // update only price
+    const updatedRequest = {
+      requestID: ar._id,
+      typeID: ar.type._id,
+      locationID: ar.location._id,
+      currencyID: ar.currency._id,
+      price: parseInt(row.price), // updated field
+      quantity: parseInt(ar.quantity),
+      description: ar.description
+    }
+    updateAccountRequestService(updatedRequest)
+      .then(() => {
+        message.open({ type: "success", content: "Update successful!" })
+      })
+      .catch((e) => {
+        message.open({ type: "error", content: e.message })
+      })
   }
 
   // function getActions() {
@@ -89,6 +110,13 @@ export const CompletedTable = ({ data, setData, isLoading, actionsAccess }) => {
       const index = newData.findIndex((item) => key === item.key)
       if (index > -1) {
         const item = newData[index]
+        // pass full old object and updated row
+        updateAccountRequestHandler(item, row)
+        // change tracking
+        // eslint-disable-next-line eqeqeq
+        if (item.price != row.price) {
+          item.total = row.price * item.quantity
+        }
         newData.splice(index, 1, {
           ...item,
           ...row,
@@ -123,13 +151,11 @@ export const CompletedTable = ({ data, setData, isLoading, actionsAccess }) => {
       align: "center",
       title: "Amount",
       dataIndex: "quantity",
-      editable: true
     },
     {
       align: "center",
       title: "Valids",
       dataIndex: "valid",
-      editable: true
     },
     {
       align: "center",

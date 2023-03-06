@@ -25,7 +25,7 @@ export const FarmingModule = ({ range }) => {
   })
   const [requestData, setRequestData] = useState({
     quantity: 0, price: 0,
-    currencyID: "", typeID: "Select type", locationID: "Select country",
+    currencyID: "Select currency", typeID: "Select type", locationID: "Select country",
     description: ""
   })
 

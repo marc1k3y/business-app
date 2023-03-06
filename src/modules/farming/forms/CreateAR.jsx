@@ -86,6 +86,8 @@ export const CreateARForm = ({ requestData, setRequestData }) => {
           </Form.Item>
           <Form.Item label="Total" required>
             <InputNumber
+              value={requestData.price ? requestData.quantity * requestData.price : ""}
+              onChange={(e) => setRequestData((prev) => ({ ...prev, price: e / requestData.quantity }))}
             // value={requestData.total}
             // onChange={(e) => setRequestData((prev) => ({ ...prev, total: e }))} 
             />

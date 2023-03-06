@@ -26,3 +26,8 @@ export const createAccountRequestService = async (requestData) => {
   const { data } = await $farmingAPIjwt.post("accountRequests/create", requestData)
   return data
 }
+
+export const updateAccountRequestService = async (requestData) => {
+  const { data } = await $farmingAPIjwt.put("accountRequests/update", requestData)
+  return data
+}
